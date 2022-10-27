@@ -32,15 +32,23 @@ class App extends Component {
             );
             this.setState({ users: res.data.items, loading: false });
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
 
+    //! function used to clear users from state - clear the current list of users
+    clearUsers = () => this.setState({ users: [], loading: false });
+
     render() {
+        const { searchUsers, clearUsers, users } = this.state;
         return (
             <div className='App'>
                 <Navbar />
-                <Search searchUsers={this.searchUsers} />
+                <Search
+                    searchUsers={searchUsers}
+                    clearUsers={clearUsers}
+                    showClear={users.length > 0 ? true : false}
+                />
                 <div className='container'>
                     <Users loading={this.state.loading} users={this.state.users} />
                 </div>
