@@ -10,6 +10,7 @@ export class Search extends Component {
         searchUsers: PropTypes.func.isRequired,
         clearUsers: PropTypes.func.isRequired,
         showClear: PropTypes.bool.isRequired,
+        setAlert: PropTypes.func.isRequired
     };
 
     //! onchange event firing and changing the state to the value of what the user types
@@ -20,12 +21,14 @@ export class Search extends Component {
     //! this event also clears the search input
     onSubmit = (e) => {
         e.preventDefault();
-        this.props.searchUsers(this.state.text);
+        this.state.text === ""
+            ? this.props.setAlert("Please enter something", "light")
+            : this.props.searchUsers(this.state.text);
         this.setState({ text: "" });
     };
     //! render is used to show the content on the page
     render() {
-        const {showClear, clearUsers } = this.props;
+        const { showClear, clearUsers } = this.props;
         return (
             <div>
                 <form onSubmit={this.onSubmit} className='form' style={{ margin: "0 10px 0 10px" }}>
