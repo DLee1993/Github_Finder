@@ -1,9 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
 import axios from "axios";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
+import About from "./components/pages/About";
 import "./App.css";
 
 class App extends Component {
@@ -50,25 +52,41 @@ class App extends Component {
             },
         });
         setTimeout(() => {
-            this.setState({alert: null})
+            this.setState({ alert: null });
         }, 5000);
     };
 
     render() {
         return (
-            <div className='App'>
-                <Navbar />
-                <div className='container'>
-                    <Alert alert={this.state.alert}/>
-                    <Search
-                        searchUsers={this.searchUsers}
-                        clearUsers={this.clearUsers}
-                        showClear={this.state.users.length > 0 ? true : false}
-                        setAlert={this.setAlert}
-                    />
-                    <Users loading={this.state.loading} users={this.state.users} />
+            <Router>
+                <div className='App'>
+                    <Navbar />
+                    <div className='container'>
+                        <Alert alert={this.state.alert} />
+                        <Routes>
+                            <Route
+                                exact
+                                path='/'
+                                element={
+                                    <Fragment>
+                                        <Search
+                                            searchUsers={this.searchUsers}
+                                            clearUsers={this.clearUsers}
+                                            showClear={this.state.users.length > 0 ? true : false}
+                                            setAlert={this.setAlert}
+                                        />
+                                        <Users
+                                            loading={this.state.loading}
+                                            users={this.state.users}
+                                        />
+                                    </Fragment>
+                                }
+                            />
+                            <Route exact path='/about' element={About()} />
+                        </Routes>
+                    </div>
                 </div>
-            </div>
+            </Router>
         );
     }
 }
