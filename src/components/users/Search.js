@@ -16,11 +16,14 @@ export class Search extends Component {
     onChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     };
+    //! onsubmit event firing and takes this.state.text as the argument into seachUsers(APP.JS)
+    //! this event also clears the search input
     onSubmit = (e) => {
         e.preventDefault();
         this.props.searchUsers(this.state.text);
         this.setState({ text: "" });
     };
+    //! render is used to show the content on the page
     render() {
         const {showClear, clearUsers } = this.props;
         return (
