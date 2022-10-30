@@ -4,6 +4,7 @@ import axios from "axios";
 import "./App.css";
 import Navbar from "./components/layout/Navbar";
 import Users from "./components/users/Users";
+import User from "./components/users/User";
 import Search from "./components/users/Search";
 import Alert from "./components/layout/Alert";
 import About from "./components/pages/About";
@@ -11,6 +12,7 @@ import About from "./components/pages/About";
 class App extends Component {
     state = {
         users: [],
+        user: {},
         loading: false,
         alert: null,
     };
@@ -23,6 +25,19 @@ class App extends Component {
                 `https://api.github.com/search/users?q=${text}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
             );
             this.setState({ users: res.data.items, loading: false });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    //!  Get a single user
+    getUser = async (username) => {
+        try {
+            this.setState({ loading: true });
+            const res = await axios.get(
+                `https://api.github.com/users/${username}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+            );
+            this.setState({ user: res.data, loading: false });
         } catch (error) {
             console.log(error);
         }
@@ -43,7 +58,7 @@ class App extends Component {
     };
 
     render() {
-        const { users, loading, alert } = this.state;
+        const { users, user, loading, alert } = this.state;
         return (
             <Router>
                 <div className='App'>
@@ -65,7 +80,13 @@ class App extends Component {
                                     </Fragment>
                                 }
                             />
-                            <Route path="/about" element={About()} />
+                            <Route path='/about' element={About()} />
+                            <Route
+                                path='/users/:login'
+                                element={
+                                    <User getUser={this.getUser} user={user} loading={loading} />
+                                }
+                            />
                         </Routes>
                     </div>
                 </div>
