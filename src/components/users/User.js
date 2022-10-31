@@ -1,9 +1,15 @@
 import React, { useEffect, Fragment } from "react";
 import { useParams, Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import Repos from "../repos/Repos";
 
-function User({ user, getUser }) {
+const User = ({ user, getUser, getUserRepos, repos }) => {
     const { login } = useParams();
+    useEffect(() => {
+        getUser(login);
+        getUserRepos(login);
+        //eslint-disable-next-line
+    }, []);
     const {
         name,
         avatar_url,
@@ -18,10 +24,6 @@ function User({ user, getUser }) {
         public_gists,
         hireable,
     } = user;
-
-    useEffect(() => {
-        getUser(login);
-    }, [getUser, login]);
 
     return (
         <Fragment>
@@ -91,14 +93,17 @@ function User({ user, getUser }) {
                 <div className='badge badge-light'>Public Repos: {public_repos}</div>
                 <div className='badge badge-dark'>Public Gists: {public_gists}</div>
             </div>
+            <Repos repos={repos} />
         </Fragment>
     );
-}
+};
 
 User.propTypes = {
     loading: PropTypes.bool.isRequired,
     user: PropTypes.object.isRequired,
     getUser: PropTypes.func.isRequired,
+    getUserRepos: PropTypes.func.isRequired,
+    repos: PropTypes.array.isRequired,
 };
 
 export default User;
