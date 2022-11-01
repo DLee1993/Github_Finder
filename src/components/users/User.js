@@ -1,9 +1,12 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Repos from "../repos/Repos";
+import GithubContext from "../../context/Github/GithubContext";
 
-const User = ({ user, getUser, getUserRepos, repos }) => {
+const User = ({ getUserRepos, repos }) => {
+    const githubcontext = useContext(GithubContext);
+    const { user, getUser } = githubcontext;
     const { login } = useParams();
     useEffect(() => {
         getUser(login);
@@ -99,9 +102,6 @@ const User = ({ user, getUser, getUserRepos, repos }) => {
 };
 
 User.propTypes = {
-    loading: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
-    getUser: PropTypes.func.isRequired,
     getUserRepos: PropTypes.func.isRequired,
     repos: PropTypes.array.isRequired,
 };
